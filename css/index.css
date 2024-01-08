@@ -30,6 +30,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   max-width: 100%; /* 600px /16 */
+  word-break: keep-all;
 }
 
 @media (max-width: 740px) {
@@ -110,9 +111,6 @@ pre {
   padding: 1em;
   margin: 0.5em 0;
   background-color: #f6f6f6;
-}
-code {
-  word-break: break-all;
 }
 
 blockquote {
