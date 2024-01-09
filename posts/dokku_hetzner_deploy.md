@@ -11,7 +11,7 @@ tags:
 layout: layouts/post.njk
 ---
 
-In [previous](/posts/dokku) [posts](/posts/starting-docker-file) I talked about [Dokku](https://dokku.com), a self-hosted Platform as a Service (PAAS) solution that you can run on Hetzner.
+In [previous](/posts/dokku/) [posts](/posts/single-docker-file) I talked about [Dokku](https://dokku.com), a self-hosted Platform as a Service (PAAS) solution that you can run on Hetzner.
 
 This is a great solution for a single developer, when you want to launch a hobby side project or small business and you don't have a big budget. Here I go through the steps to launching your own micro-PAAS in under 30 minutes!
 
