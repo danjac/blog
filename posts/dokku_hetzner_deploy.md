@@ -74,7 +74,7 @@ The neat thing about using a Python module instead of a config file or command l
 
 You can add more processes to your `app.json` and/or `Procfile` as needed, for example if you want to run Celery, or schedule cron jobs. See the [Dokku](https://dokku.com) documentation for details.
 
-I prefer to handle Dokku deployments using Docker rather than buildpacks. For details on building an optimal `Dockerfile` for Dokku deployments, see [my previous article](/posts/dokku).
+I prefer to handle Dokku deployments using Docker rather than buildpacks. For details on building an optimal `Dockerfile` for Dokku deployments, see [my previous article](/posts/single-docker-file).
 
 ## Create a Hetzner project
 
