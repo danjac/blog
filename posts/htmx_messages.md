@@ -50,18 +50,27 @@ Our very simple index template `index.html` looks like this:
 
 ```jinja2
 {% raw %}
-<html>
-  <head>
-    <title>Messages demo</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  </head>
-  <body>
-    {% include "_messages.html" %}
-    {% include "_send_button.html" %}
-  </body>
-</html>
+  {% load static %}
+  <!DOCTYPE html>
+  <html lang="en">
+      <head>
+          <title>Messages demo</title>
+          <meta name="description" content="HTMX django messages demo">
+          <meta name="keywords" content="htmx django">
+          <link rel="stylesheet" href="{% static 'index.css' %}">
+          <script src="https://unpkg.com/htmx.org@1.9.10"
+                  integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+                  crossorigin="anonymous"></script>
+          <script defer
+                  src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+      </head>
+      <body>
+          {% include "_messages.html" %}
+          <main>
+              {% include "_send_button.html" %}
+          </main>
+      </body>
+  </html>
 {% endraw %}
 ```
 
@@ -72,10 +81,15 @@ The template `_send_button.html` looks like this:
 ```jinja2
 {% raw %}
   <button hx-post="{% url 'send_message' %}"
-          hx-swap="innerHTML"
+          hx-swap="outerHTML"
           hx-target="this"
-          hx-headers="{'X-CSRF-Token': '{{ csrf_token }}'}">
-          {% if message_sent %}Send again{% else %}Send message{% endif %}
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          class="btn btn-lg">
+      {% if message_sent %}
+          Send again
+      {% else %}
+          Send message
+      {% endif %}
   </button>
 {% endraw %}
 ```
@@ -265,15 +279,15 @@ Thankfully, we've written most of the logic in our decorator, so it's not much m
           return response
 ```
 
-You will need to add this middleware to the `MIDDLEWARE` list in your settings. It should be placed after `django_htmx.middleware.HtmxMiddleware`.
+You will need to add this middleware to the `MIDDLEWARE` list in your settings. It should be placed after `django_htmx.middleware.HtmxMiddleware` and `django.contrib.messages.middleware.MessageMiddleware`.
 
 Now we can revert back to our original version of the view, as we don't need that extra logic for rendering the messages:
 
 ```python
-  def send_message(request: HttpRequest) -> HttpResponse:
-      """Just sends an OK message back to the user."
-      messages.success(request, "All OK!")
-      return render(request, "_send_button.html", {"message_sent": True})
+def send_message(request: HttpRequest) -> HttpResponse:
+    """Just sends an OK message back to the user."""
+    messages.success(request, "All OK!")
+    return render(request, "_send_button.html", {"message_sent": True})
 ```
 
 There is one annoyance remaining. When rendering the message, it just sticks around at the top of the screen (or wherever we put our messages). In a traditional server-rendered application this is less of a problem: Django messages are removed from the session when rendered, so once you reload the page (by navigating to a link, for example) the message goes away. In an HTMX-enhanced site however the whole point is to avoid reloading the page as much as possible, by just re-rendering parts of the page in response to server-side actions. But that means the messages aren't removed in between requests.
@@ -282,16 +296,19 @@ This is more of a client-side than server-side problem. If you remember earlier 
 
 ```jinja2
 {% raw %}
-  <div id="messages" class="messages">
+<div id="messages"
+     class="messages"
+     {% if hx_oob %}hx-swap-oob="true"{% endif %}>
     {% if messages %}
-        <ul x-data="{show: true}"
-            x-show="show"
-            x-transition
-            x-init="setTimeout(() => show = false, 2000)">
-          {% for message in messages %}
-              <li class="message message-{{ message.tags }}"
-                  role="alert">{{ message.message }}</li>
-          {% endfor %}
+        <ul>
+            {% for message in messages %}
+                <li class="message message-{{ message.tags }}"
+                    role="alert"
+                    x-data="{show: true}"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 2000)">{{ message.message }}</li>
+            {% endfor %}
         </ul>
     {% endif %}
 </div>
@@ -306,4 +323,5 @@ Finally, we trigger the immediate behaviour when the `<ul>` element is rendered:
 
 Now, when our messages are rendered, they will disappear automatically after a little while. Note that this functionality will work whether we are rendering the messages in our HTMX response, or after a full-page refresh or redirect.
 
+Full code for this article can be found [here](https://github.com/danjac/django_htmx_messages).
 
