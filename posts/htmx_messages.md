@@ -327,7 +327,7 @@ The `x-data` attribute sets a variable `show`.  The `x-show` attribute will hide
 
 We use `x-transition` to make this a little smoother (with some more CSS you can [tweak](https://alpinejs.dev/directives/transition) the transition effects).
 
-Finally, we trigger the immediate behaviour when the `<li>` element is rendered: it will set a timeout that will set the `show` flag to `false` after a couple seconds.
+Finally, with `x-init` we trigger the immediate behaviour when the `<li>` element is rendered: it will set a timeout that will set the `show` flag to `false` after a couple seconds.
 
 Now, when our messages are rendered, they will disappear automatically after a little while. Note that this functionality will work whether we are rendering the messages in our HTMX response, or after a full-page refresh or redirect.
 
