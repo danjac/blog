@@ -323,7 +323,7 @@ This is more of a client-side than server-side problem. If you remember earlier 
 {% endraw %}
 ```
 
-The `x-data` initializes the `<ul>` element with Alpine, and sets a variable `show`.  The `x-show` attribute will hide the element.
+The `x-data` attribute sets a variable `show`.  The `x-show` attribute will hide the element if `show` is `false`.
 
 We use `x-transition` to make this a little smoother (with some more CSS you can [tweak](https://alpinejs.dev/directives/transition) the transition effects).
 
