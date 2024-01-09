@@ -121,7 +121,7 @@ So far so good! However, when we run the application and click the "Send message
 
 The problem is that HTMX will only render content into the specified `hx-target`, in this case the button itself, and our view only re-renders the `_send_button.html` template. Somehow we need to inject the messages into our `POST` response, without re-rendering the entire page.
 
-However HTMX has an answer for this problem: `hx-swap-oob` ("OOB" means "Out of Band"). This [handy attribute](https://htmx.org/attributes/hx-swap-oob/) allows us to "side-load" additional snippets of content into our response, in addition to whatever we want to inject into the DOM node specified by `hx-target`.
+However HTMX has an answer for this problem: `hx-swap-oob` ("OOB" means "Out of Band"). This [handy attribute](https://htmx.org/attributes/hx-swap-oob/) allows us to "side-load" additional snippets of content into our response, allowing us to update any other part of the page in addition to whatever we want to inject into the DOM node specified by `hx-target`.
 
 Let's add this to our `_messages.html` template:
 
@@ -162,6 +162,10 @@ However, we somehow need to render this template to our final response. Here's o
       return response
 ```
 
+_Et voilà_:
+
+![Screen showing button and 'All OK!' message](/img/django-messages.png)
+
 When clicking the button, you should now see the 'All OK!' message at the top of the screen. We append another rendered template to our Django `HttpResponse` instance using `HttpResponse.write()`, and insert the `hx-swap-oob` attribute. HTMX will then inject the rendered messages into the `messages` node.
 
 This works well, but in a large application writing this boilerplate each time is quite painful. We could wrap this into a function, for example:
@@ -201,10 +205,9 @@ This could be done slightly better using a decorator:
   )
 
   def inject_messages(view: Callable) -> Callable:
-
+      """Injects HTMX messages into response. """
       @functools.wraps(view)
       def _wrapper(request: HttpRequest, *args, **kwargs) -> HttpResponse:
-
           response = view(request, *args, **kwargs)
           if not request.htmx:
               return response
@@ -219,6 +222,7 @@ This could be done slightly better using a decorator:
                 request=request,
              )
           return response
+      return _wrapper
 ```
 
 And our view again:
@@ -234,11 +238,13 @@ And our view again:
 
 There is a bit more logic in our decorator. We don't want to append the messages if we are doing a full page render or redirect, as the messages will get rendered anyway. Therefore we check if the request has an `HX-Request` header (it won't if it's a non-HTMX request) or if it has an HTMX header that tells the browser to reload or re-render the entire page. See [here](https://htmx.org/reference/#request_headers) for a reference of the various HTMX request headers.
 
-Note that the `django-htmx` middleware adds the `htmx` attribute to our `request`, and `request.htmx` will always be `False` (or falsy) if the `HX-Request` header is absent.
+Note that the `django-htmx` middleware adds the `htmx` attribute to our `request`, and `request.htmx` will always be `False` (or false-y) if the `HX-Request` header is absent.
+
+We call `get_messages()` to check if we do have any messages. This function allows us to check if there are any messages, without removing them from the session.
 
 This is an improvement, but still bug-prone: we have to remember to include this decorator whenever we add a message in our view, and sooner or later we'll forget to do so (maybe when adding success or failure messages to an existing view) and wonder why our message doesn't show up.
 
-Instead we can use middleware. Middleware executes with every request, so we can be assured this will work whether the view has messages or not. There's a bit of extra overhead compared to a decorator as it is always going to be called, but in this case we don't have any expensive calls (like database operations).
+Instead we can use middleware. Middleware executes with every request, so we can be assured this will work whether the view has messages or not. There's a bit of extra overhead compared to a decorator as it is always going to be called with every view, but in this case we don't have any expensive calls (like database operations) so it's probably worth it to avoid this particular source of bugs.
 
 Thankfully, we've written most of the logic in our decorator, so it's not much more work to turn it into middleware:
 
@@ -290,6 +296,8 @@ def send_message(request: HttpRequest) -> HttpResponse:
     return render(request, "_send_button.html", {"message_sent": True})
 ```
 
+
+
 There is one annoyance remaining. When rendering the message, it just sticks around at the top of the screen (or wherever we put our messages). In a traditional server-rendered application this is less of a problem: Django messages are removed from the session when rendered, so once you reload the page (by navigating to a link, for example) the message goes away. In an HTMX-enhanced site however the whole point is to avoid reloading the page as much as possible, by just re-rendering parts of the page in response to server-side actions. But that means the messages aren't removed in between requests.
 
 This is more of a client-side than server-side problem. If you remember earlier we included the Alpine.js CDN as well as HTMX, because we anticipated the need for doing small client-side interactions. Let's go back to our `_messages.html` template and enhance it with Alpine.js attributes:
@@ -319,7 +327,7 @@ The `x-data` initializes the `<ul>` element with Alpine, and sets a variable `sh
 
 We use `x-transition` to make this a little smoother (with some more CSS you can [tweak](https://alpinejs.dev/directives/transition) the transition effects).
 
-Finally, we trigger the immediate behaviour when the `<ul>` element is rendered: it will set a timeout that will set the `show` flag to `false` after a couple seconds.
+Finally, we trigger the immediate behaviour when the `<li>` element is rendered: it will set a timeout that will set the `show` flag to `false` after a couple seconds.
 
 Now, when our messages are rendered, they will disappear automatically after a little while. Note that this functionality will work whether we are rendering the messages in our HTMX response, or after a full-page refresh or redirect.
 
