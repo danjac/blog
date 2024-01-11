@@ -17,6 +17,8 @@ Results-driven senior full-stack software developer with over 10 years of indust
 
 Based in Finland, UK and Finnish dual citizen.
 
+----
+
 ## Contact Details
 
 * **Email**: danjac2018@gmail.com
@@ -24,6 +26,8 @@ Based in Finland, UK and Finnish dual citizen.
 * **Linkedin**: https://www.linkedin.com/in/dan-jacob-880b3619b/
 * **Github**: https://github.com/danjac
 * **Blog**: https://danjacob.net
+
+----
 
 ## Skills
 
@@ -94,6 +98,8 @@ Based in Finland, UK and Finnish dual citizen.
 </div>
 </div>
 
+----
+
 ## Employment
 
 **2023-present:** full-time full-stack developer for Anders Innovations, a Finnish
@@ -137,6 +143,8 @@ PHP projects including:
 * Maintenance/calendar application for Finnish companies
 * Alexa-based search engine for US gyms
 
+----
+
 ## Side Projects and Open Source
 
 ### Open Source
@@ -154,9 +162,13 @@ Podcast aggregation app built using Django, HTMX and Alpine. The machine
 learning uses scikit-learn and NLTK to extract content from podcast RSS feeds to
 create new recommendations for users based on their listening history.
 
+----
+
 ## Education
 
-Postgraduate diploma in IT, University of Abertay, Dundee
+Postgraduate diploma in IT, University of Abertay, Dundee, UK
+
+----
 
 ## Interests
 
