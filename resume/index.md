@@ -27,6 +27,11 @@ Based in Finland, UK and Finnish dual citizen.
 
 ## Skills
 
+<div class="resume-skills">
+
+
+<div>
+
 ### Backend
 
 * Django
@@ -44,6 +49,9 @@ Based in Finland, UK and Finnish dual citizen.
 * Nuxt
 * Eleventy
 * Go
+</div>
+
+<div>
 
 ### Frontend
 
@@ -58,6 +66,9 @@ Based in Finland, UK and Finnish dual citizen.
 * Tailwind
 * Bootstrap
 * Design Systems
+</div>
+
+<div>
 
 ### Devops
 
@@ -68,11 +79,20 @@ Based in Finland, UK and Finnish dual citizen.
 * Github Actions
 * Gitlab CI
 * Jenkins
+</div>
+
+
+<div>
 
 ### Other Skills
 
-Conversational Finnish and basic Russian. English native speaker. Qualified
-TEFL/ESL teacher.
+* English (Native)
+* Finnish (C1)
+* Russian (B1)
+* TEFL
+
+</div>
+</div>
 
 ## Employment
 
