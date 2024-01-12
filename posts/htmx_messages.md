@@ -290,10 +290,10 @@ You will need to add this middleware to the `MIDDLEWARE` list in your settings. 
 Now we can revert back to our original version of the view, as we don't need that extra logic for rendering the messages:
 
 ```python
-def send_message(request: HttpRequest) -> HttpResponse:
-    """Just sends an OK message back to the user."""
-    messages.success(request, "All OK!")
-    return render(request, "_send_button.html", {"message_sent": True})
+  def send_message(request: HttpRequest) -> HttpResponse:
+      """Just sends an OK message back to the user."""
+      messages.success(request, "All OK!")
+      return render(request, "_send_button.html", {"message_sent": True})
 ```
 
 
@@ -304,22 +304,22 @@ This is more of a client-side than server-side problem. If you remember earlier 
 
 ```jinja2
 {% raw %}
-<div id="messages"
-     class="messages"
-     {% if hx_oob %}hx-swap-oob="true"{% endif %}>
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li class="message message-{{ message.tags }}"
-                    role="alert"
-                    x-data="{show: true}"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)">{{ message.message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</div>
+  <div id="messages"
+       class="messages"
+       {% if hx_oob %}hx-swap-oob="true"{% endif %}>
+      {% if messages %}
+          <ul>
+              {% for message in messages %}
+                  <li class="message message-{{ message.tags }}"
+                      role="alert"
+                      x-data="{show: true}"
+                      x-show="show"
+                      x-transition
+                      x-init="setTimeout(() => show = false, 2000)">{{ message.message }}</li>
+              {% endfor %}
+          </ul>
+      {% endif %}
+  </div>
 {% endraw %}
 ```
 
