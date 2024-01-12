@@ -109,7 +109,7 @@ Finally we need to render the messages in `_messages.html`:
             {% endfor %}
         </ul>
     {% endif %}
-</div>
+  </div>
 {% endraw %}
 ```
 
