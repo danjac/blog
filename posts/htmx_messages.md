@@ -137,7 +137,7 @@ Let's add this to our `_messages.html` template:
             {% endfor %}
         </ul>
     {% endif %}
-</div>
+  </div>
 {% endraw %}
 ```
 
