@@ -9,7 +9,7 @@ eleventyNavigation:
   order: 4
 ---
 
-Download PDF [here](/docs/resume.pdf).
+Download PDF [here](/docs/dan-jacob-cv.pdf).
 
 ## Summary
 
