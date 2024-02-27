@@ -77,6 +77,8 @@ Based in Finland, UK and Finnish dual citizen.
 ### Devops
 
 * Docker
+* AWS
+* Azure
 * OpenShift
 * Ansible
 * Heroku
